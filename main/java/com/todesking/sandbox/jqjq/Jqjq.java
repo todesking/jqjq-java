@@ -7,8 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -36,6 +39,44 @@ public class Jqjq {
 
 	public static JqjqBufferedReader from(BufferedReader bufferedReader) {
 		return new JqjqBufferedReader(bufferedReader);
+	}
+
+	public static JqjqString from(String str) {
+		return new JqjqString(str);
+	}
+
+	public static class JqjqString {
+		public JqjqString(String str) {
+			this.str = str;
+		}
+
+		private final String str;
+
+		public JqjqStringIterable split(String sep) {
+			return new JqjqStringIterable(Arrays.asList(StringUtils
+				.splitPreserveAllTokens(str, sep)));
+		}
+	}
+
+	public static class JqjqStringIterable extends JqjqIterable<String> {
+		public JqjqStringIterable(Iterable<String> source) {
+			this.source = source;
+		}
+
+		private final Iterable<String> source;
+
+		public JqjqIterable<Integer> toInteger() {
+			return transform(new Function<String, Integer>() {
+				public Integer apply(String str) {
+					return Integer.parseInt(str);
+				}
+			});
+		}
+
+		@Override
+		public Iterator<String> iterator() {
+			return source.iterator();
+		}
 	}
 
 	public static class JqjqInt {
@@ -240,6 +281,10 @@ public class Jqjq {
 						});
 				}
 			};
+		}
+
+		public String join(String sep) {
+			return StringUtils.join(iterator(), sep);
 		}
 	}
 

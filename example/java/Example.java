@@ -13,6 +13,29 @@ import com.todesking.sandbox.jqjq.Jqjq.WithIndex;
 
 public class Example {
 	public static void main(String[] args) throws IOException {
+		reversedPascalTriangle();
+	}
+
+	private static void reversedPascalTriangle() {
+		final String prompt = "input numbers: ";
+		System.out.print(prompt);
+		for (String line : from(System.in).eachLine()) {
+			JqjqIterable<Integer> nums = from(line).split(" ").toInteger();
+			while (true) {
+				final String str = nums.join(" ");
+				if (str.length() == 0)
+					break;
+				System.out.println(str);
+				nums =
+					nums.eachPair().transform(
+						new Function<Tuple<Integer>, Integer>() {
+							public Integer apply(Tuple<Integer> arg0) {
+								return arg0.get(0) + arg0.get(1);
+							}
+						});
+			}
+			System.out.println(prompt);
+		}
 	}
 
 	static void echo() {
