@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -13,10 +14,27 @@ import com.todesking.sandbox.jqjq.Jqjq.WithIndex;
 
 public class Example {
 	public static void main(String[] args) throws IOException {
-		reversedPascalTriangle();
 	}
 
-	private static void reversedPascalTriangle() {
+	static void pascalsTriangle() {
+		System.out.print("input triangle size: ");
+		final Scanner s = from(System.in).toScanner();
+		final int size = s.nextInt();
+		JqjqIterable<Integer> nums = from(1).to(1);
+		System.out.println(nums.join(" "));
+		for (int i : from(0).to(size - 2)) {
+			nums =
+				nums.appendFirst(0).appendLast(0).eachPair().transform(
+					new Function<Tuple<Integer>, Integer>() {
+						public Integer apply(Tuple<Integer> arg0) {
+							return arg0.get(0) + arg0.get(1);
+						}
+					});
+			System.out.println(nums.join(" "));
+		}
+	}
+
+	static void reversedPascalTriangle() {
 		final String prompt = "input numbers: ";
 		System.out.print(prompt);
 		for (String line : from(System.in).eachLine()) {

@@ -10,17 +10,29 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.UnmodifiableIterator;
 
 public class Jqjq {
+	public static <T> JqjqIterable<T> toIterable(final T value) {
+		return new JqjqIterable<T>() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public Iterator<T> iterator() {
+				return Lists.newArrayList(value).iterator();
+			}
+		};
+	}
+
 	public static JqjqFile from(File file) {
 		return new JqjqFile(file);
 	}
@@ -149,6 +161,10 @@ public class Jqjq {
 		public JqjqIterable<String> eachLine() {
 			return from(new BufferedReader(new InputStreamReader(source)))
 				.eachLine();
+		}
+
+		public Scanner toScanner() {
+			return new Scanner(this.source);
 		}
 	}
 
@@ -285,6 +301,14 @@ public class Jqjq {
 
 		public String join(String sep) {
 			return StringUtils.join(iterator(), sep);
+		}
+
+		public JqjqIterable<T> appendFirst(T value) {
+			return from(Iterables.concat(toIterable(value), this));
+		}
+
+		public JqjqIterable<T> appendLast(T value) {
+			return from(Iterables.concat(this, toIterable(value)));
 		}
 	}
 
